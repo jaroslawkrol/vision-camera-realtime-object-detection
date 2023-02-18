@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E555C0D2413F4C50049A1A2 /* VisionCameraRealtimeObjectDetection.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.m */; };
+		591301DFA4771481A686565B /* RealtimeObjectDetectionProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A9C523A8A1CAA4E68968F9C /* RealtimeObjectDetectionProcessor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,8 +24,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libVisionCameraRealtimeObjectDetection.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVisionCameraRealtimeObjectDetection.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5881CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisionCameraRealtimeObjectDetection.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisionCameraRealtimeObjectDetection.m; sourceTree = "<group>"; };
+		2A9C523A8A1CAA4E68968F9C /* RealtimeObjectDetectionProcessor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RealtimeObjectDetectionProcessor.m; path = RealtimeObjectDetectionProcessor/RealtimeObjectDetectionProcessor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,10 +49,17 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				B3E7B5881CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.h */,
-				B3E7B5891CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
+				C5C8043DCFB040CD55EB58CC /* RealtimeObjectDetectionProcessor */,
 			);
+			sourceTree = "<group>";
+		};
+		C5C8043DCFB040CD55EB58CC /* RealtimeObjectDetectionProcessor */ = {
+			isa = PBXGroup;
+			children = (
+				2A9C523A8A1CAA4E68968F9C /* RealtimeObjectDetectionProcessor.m */,
+			);
+			name = RealtimeObjectDetectionProcessor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,7 +119,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* VisionCameraRealtimeObjectDetection.m in Sources */,
+				591301DFA4771481A686565B /* RealtimeObjectDetectionProcessor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

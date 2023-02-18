@@ -21,6 +21,21 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+# Convert all permission pods into static libraries
+#pre_install do |installer|
+#  Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+#
+#  installer.pod_targets.each do |pod|
+#    if pod.name.eql?('RNPermissions') || pod.name.start_with?('Permission-')
+#      def pod.build_type;
+#        # Uncomment the line corresponding to your CocoaPods version
+#         Pod::BuildType.static_library # >= 1.9
+#        # Pod::Target::BuildType.static_library # < 1.9
+#      end
+#    end
+#  end
+#end
+
 target 'VisionCameraRealtimeObjectDetectionExample' do
   config = use_native_modules!
 
@@ -42,10 +57,13 @@ target 'VisionCameraRealtimeObjectDetectionExample' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  
+  # Pods for testing
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
 
   target 'VisionCameraRealtimeObjectDetectionExampleTests' do
     inherit! :complete
-    # Pods for testing
   end
 
   post_install do |installer|

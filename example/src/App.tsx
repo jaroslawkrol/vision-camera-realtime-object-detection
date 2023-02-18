@@ -1,25 +1,61 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { StyleSheet, View } from 'react-native';
-import { VisionCameraRealtimeObjectDetectionView } from 'vision-camera-realtime-object-detection';
+import { useCameraDevices } from 'react-native-vision-camera';
+import { check, PERMISSIONS, request } from 'react-native-permissions';
+import LoadingView from './components/LoadingView';
+import PermissionDenied from './components/PermissionDenied';
+import ObjectDetector from './components/ObjectDetector';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <VisionCameraRealtimeObjectDetectionView color="#32a852" style={styles.box} />
-    </View>
-  );
+interface AppState {
+  isLoading: boolean;
+  isPermissionGranted: boolean;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-});
+export default function App() {
+  const devices = useCameraDevices('wide-angle-camera');
+  const device = devices.back;
+
+  const [appState, setAppState] = useState<AppState>({
+    isLoading: true,
+    isPermissionGranted: false,
+  });
+
+  useEffect(() => {
+    const bootstrap = async () => {
+      const permissionStatus = await check(PERMISSIONS.IOS.CAMERA);
+      switch (permissionStatus) {
+        case 'granted':
+        case 'limited': {
+          setAppState({
+            isLoading: false,
+            isPermissionGranted: true,
+          });
+          break;
+        }
+        case 'denied': {
+          const requestStatus = await request(PERMISSIONS.IOS.CAMERA);
+          setAppState({
+            isLoading: false,
+            isPermissionGranted: requestStatus === 'granted',
+          });
+          break;
+        }
+        case 'blocked':
+        case 'unavailable':
+        default: {
+          setAppState({
+            isLoading: false,
+            isPermissionGranted: false,
+          });
+          break;
+        }
+      }
+    };
+
+    bootstrap();
+  }, []);
+
+  if (appState.isLoading || !device) return <LoadingView />;
+  if (!appState.isPermissionGranted) return <PermissionDenied />;
+  return <ObjectDetector device={device} />;
+}
