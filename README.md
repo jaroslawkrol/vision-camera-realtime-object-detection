@@ -5,18 +5,32 @@ VisionCamera Frame Processor Plugin to detect objects using MLKit
 ## Installation
 
 ```sh
-npm install vision-camera-realtime-object-detection
+npm install --save vision-camera-realtime-object-detection
 ```
 
 ## Usage
 
 ```js
-import { VisionCameraRealtimeObjectDetectionView } from "vision-camera-realtime-object-detection";
+import {
+  DetectedObject,
+  detectObjects,
+} from 'vision-camera-realtime-object-detection';
 
 // ...
 
-<VisionCameraRealtimeObjectDetectionView color="tomato" />
+const frameProcessor = useFrameProcessor((frame) => {
+  'worklet';
+
+  const detectedObjects = detectObjects(frame, frameProcessorConfig);
+}, []);
 ```
+## To do: 
+
+[x] #Android - resizing frame
+
+[x] #Android - detecting orientation
+
+[x] #Android - upgrade androidx.camera:camera-core
 
 ## Contributing
 

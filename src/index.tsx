@@ -29,9 +29,7 @@ export interface FrameProcessorConfig {
 }
 
 /**
- * Returns an array of matching `ImageLabel`s for the given frame.
- *
- * This algorithm executes within **~60ms**, so a frameRate of **16 FPS** perfectly allows the algorithm to run without dropping a frame. Anything higher might make video recording stutter, but works too.
+ * Returns an array of matching `DetectedObject`s for the given frame.
  */
 export function detectObjects(
   frame: Frame,

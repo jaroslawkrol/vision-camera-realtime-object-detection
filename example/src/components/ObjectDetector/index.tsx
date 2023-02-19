@@ -41,14 +41,15 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
   }, []);
 
   return (
-    <Camera
-      frameProcessorFps={5}
-      frameProcessor={frameProcessor}
-      style={StyleSheet.absoluteFill}
-      device={device}
-      isActive={true}
-      preset={'medium'}
-    >
+    <View style={StyleSheet.absoluteFill}>
+      <Camera
+        frameProcessorFps={5}
+        frameProcessor={frameProcessor}
+        style={StyleSheet.absoluteFill}
+        device={device}
+        isActive={true}
+        preset={'medium'}
+      />
       {objects?.map(
         (
           { top, left, width, height, labels }: DetectedObject,
@@ -64,7 +65,7 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
           </View>
         )
       )}
-    </Camera>
+    </View>
   );
 };
 
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderWidth: 1,
     borderColor: '#00ff00',
+    zIndex: 9,
   },
   detectionFrameLabel: {
     backgroundColor: 'rgba(0, 255, 0, 0.25)',
