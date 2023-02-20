@@ -26,11 +26,11 @@ const frameProcessor = useFrameProcessor((frame) => {
 ```
 ## To do: 
 
-[x] #Android - resizing frame
-
-[x] #Android - detecting orientation
-
-[x] #Android - upgrade androidx.camera:camera-core
+- [ ] \#Android - resizing frame
+- [ ] \#Android - detecting orientation
+- [ ] \#Android, #iOS - extending object detection config
+- [ ] \#Android, #iOS - merging with Vision Camera v3 (rc)
+- [ ] \#Android - upgrade androidx.camera:camera-core
 
 ## Contributing
 

@@ -44,8 +44,8 @@ class RealtimeObjectDetectionProcessorPlugin: FrameProcessorPlugin("detectObject
         val task = detector.process(image);
         val results = WritableNativeArray()
 
-        val frameWidth = mediaImage.width
-        val frameHeight = mediaImage.height
+        val frameWidth = if(frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270) mediaImage.width else mediaImage.height
+        val frameHeight = if(frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270) mediaImage.height else mediaImage.width
 
         try {
             val objects = Tasks.await(task)

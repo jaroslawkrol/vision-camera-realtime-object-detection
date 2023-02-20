@@ -1,5 +1,5 @@
 /* globals __detectObjects */
-import { Frame } from 'react-native-vision-camera';
+import type { Frame } from 'react-native-vision-camera';
 
 export interface ObjectLabel {
   index: number;
