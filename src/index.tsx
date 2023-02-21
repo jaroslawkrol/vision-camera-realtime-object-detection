@@ -17,16 +17,36 @@ export interface DetectedObject {
   frameRotation: number;
   labels: ObjectLabel[];
 
+  /**
+   * bounding box of detected object in percentage
+   */
   top: number;
+  left: number;
   width: number;
   height: number;
-  left: number;
 }
 
 export interface FrameProcessorConfig {
-  model: string;
-  size: number;
+  /**
+   * TensorFlow model file. Should contains extension as well (f.e. model.tflite)
+   */
+  modelFile: string;
+
+  /**
+   * Batch size of model.
+   */
+  size?: number;
+
+  classificationConfidenceThreshold?: number;
+
+  maxPerObjectLabelCount?: number;
 }
+
+const defaultFrameProcessorConfig: Partial<FrameProcessorConfig> = {
+  size: 255,
+  classificationConfidenceThreshold: 0.3,
+  maxPerObjectLabelCount: 1,
+};
 
 /**
  * Returns an array of matching `DetectedObject`s for the given frame.
@@ -37,5 +57,5 @@ export function detectObjects(
 ): DetectedObject[] {
   'worklet';
   // @ts-expect-error Frame Processors are not typed.
-  return __detectObjects(frame, config.size, config.model);
+  return __detectObjects(frame, { ...defaultFrameProcessorConfig, ...config });
 }

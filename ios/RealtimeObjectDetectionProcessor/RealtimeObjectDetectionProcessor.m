@@ -27,27 +27,30 @@
 @end
 
 @interface RealtimeObjectDetectionProcessorPlugin : NSObject
-+ (MLKObjectDetector*)detector:(NSString*)filename;
++ (MLKObjectDetector*)detector:(NSDictionary*)config;
 + (ImageResizeResult*)resizeFrameToUIimage:(Frame*)frame size:(float)size;
 @end
 
 @implementation RealtimeObjectDetectionProcessorPlugin
 
-+ (MLKObjectDetector*)detector:(NSString*)filename {
++ (MLKObjectDetector*)detector:(NSDictionary*)config {
   static MLKObjectDetector* detector = nil;
   if (detector == nil) {
+    NSString* filename = config[@"modelFile"];
     NSString* extension = [filename pathExtension];
     NSString* modelName = [filename stringByDeletingPathExtension];
     NSString* path = [[NSBundle mainBundle] pathForResource:modelName ofType:extension];
     MLKLocalModel* localModel = [[MLKLocalModel alloc] initWithPath:path];
 
+    NSNumber* classificationConfidenceThreshold = config[@"classificationConfidenceThreshold"];
+    NSNumber* maxPerObjectLabelCount = config[@"maxPerObjectLabelCount"];
     MLKCustomObjectDetectorOptions* options =
         [[MLKCustomObjectDetectorOptions alloc] initWithLocalModel:localModel];
     options.detectorMode = MLKObjectDetectorModeSingleImage;
     options.shouldEnableClassification = YES;
     options.shouldEnableMultipleObjects = NO;
-    options.classificationConfidenceThreshold = @(0.3);
-    options.maxPerObjectLabelCount = 1;
+    options.classificationConfidenceThreshold = classificationConfidenceThreshold;
+    options.maxPerObjectLabelCount = maxPerObjectLabelCount.intValue;
 
     detector = [MLKObjectDetector objectDetectorWithOptions:options];
   }
@@ -82,8 +85,8 @@
 }
 
 static inline id detectObjects(Frame* frame, NSArray* args) {
-  NSNumber* size = [args objectAtIndex:0];
-  NSString* filename = [args objectAtIndex:1];
+  NSDictionary* config = [args objectAtIndex:0];
+  NSNumber* size = config[@"size"];
 
   UIImageOrientation orientation = frame.orientation;
 
@@ -94,7 +97,7 @@ static inline id detectObjects(Frame* frame, NSArray* args) {
 
   NSError* error;
   NSArray<MLKObject*>* objects =
-      [[RealtimeObjectDetectionProcessorPlugin detector:filename] resultsInImage:image
+      [[RealtimeObjectDetectionProcessorPlugin detector:config] resultsInImage:image
                                                                            error:&error];
 
   NSMutableArray* results = [NSMutableArray arrayWithCapacity:objects.count];

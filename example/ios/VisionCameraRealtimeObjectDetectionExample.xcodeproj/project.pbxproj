@@ -14,7 +14,7 @@
 		3D06205CB3467253F64A37CC /* libPods-VisionCameraRealtimeObjectDetectionExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114901553BFB5A046B3E2EAA /* libPods-VisionCameraRealtimeObjectDetectionExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		92040DB1035EEF7FED988466 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */; };
-		8D2C81FCCE59471FA810B2CE /* efficientnet_lite0_fp32_2.tflite in Resources */ = {isa = PBXBuildFile; fileRef = AEE78FD76F974BC2A031B7BC /* efficientnet_lite0_fp32_2.tflite */; };
+		DC38152D33D14343806FF634 /* model.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 90B33A24A9334E1F9DAB4446 /* model.tflite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +45,7 @@
 		B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0CCD4BBBDE995D6F19ABE06 /* Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample/Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		AEE78FD76F974BC2A031B7BC /* efficientnet_lite0_fp32_2.tflite */ = {isa = PBXFileReference; name = "efficientnet_lite0_fp32_2.tflite"; path = "../assets/model/efficientnet_lite0_fp32_2.tflite"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		90B33A24A9334E1F9DAB4446 /* model.tflite */ = {isa = PBXFileReference; name = "model.tflite"; path = "../assets/model/model.tflite"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,7 +154,7 @@
 		0ED46F017A604D728A8736E1 /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				AEE78FD76F974BC2A031B7BC /* efficientnet_lite0_fp32_2.tflite */,
+				90B33A24A9334E1F9DAB4446 /* model.tflite */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -256,7 +256,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				8D2C81FCCE59471FA810B2CE /* efficientnet_lite0_fp32_2.tflite in Resources */,
+				DC38152D33D14343806FF634 /* model.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

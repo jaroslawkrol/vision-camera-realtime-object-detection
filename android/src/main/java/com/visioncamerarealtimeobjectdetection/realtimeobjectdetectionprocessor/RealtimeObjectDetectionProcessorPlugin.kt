@@ -3,6 +3,7 @@ package com.visioncamerarealtimeobjectdetection.realtimeobjectdetectionprocessor
 import androidx.camera.core.ImageProxy
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
+import com.facebook.react.bridge.ReadableMap
 import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
@@ -14,16 +15,19 @@ import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
 class RealtimeObjectDetectionProcessorPlugin : FrameProcessorPlugin("detectObjects") {
     private var _detector: ObjectDetector? = null
 
-    fun getDetectorWithModelFile(modelFile: String): ObjectDetector {
+    fun getDetectorWithModelFile(config: ReadableMap): ObjectDetector {
         if (_detector == null) {
+            val modelFile = config.getString("modelFile")
             val localModel = LocalModel.Builder().setAssetFilePath("custom/$modelFile").build()
 
+            val classificationConfidenceThreshold = config.getDouble("classificationConfidenceThreshold")
+            val maxPerObjectLabelCount = config.getInt("maxPerObjectLabelCount")
             val customObjectDetectorOptions =
                 CustomObjectDetectorOptions.Builder(localModel)
                     .setDetectorMode(CustomObjectDetectorOptions.SINGLE_IMAGE_MODE)
                     .enableClassification()
-                    .setClassificationConfidenceThreshold(0.4f)
-                    .setMaxPerObjectLabelCount(1)
+                    .setClassificationConfidenceThreshold(classificationConfidenceThreshold.toFloat())
+                    .setMaxPerObjectLabelCount(maxPerObjectLabelCount)
                     .build()
 
             _detector = ObjectDetection.getClient(customObjectDetectorOptions)
@@ -34,9 +38,9 @@ class RealtimeObjectDetectionProcessorPlugin : FrameProcessorPlugin("detectObjec
     override fun callback(frame: ImageProxy, params: Array<Any>): WritableNativeArray {
         val mediaImage = frame.image
         if (mediaImage != null) {
-            val modelFile = params[1] as String
+            val config = params[0] as ReadableMap;
             val image = InputImage.fromMediaImage(mediaImage, frame.imageInfo.rotationDegrees)
-            val task = getDetectorWithModelFile(modelFile).process(image)
+            val task = getDetectorWithModelFile(config).process(image)
             val results = WritableNativeArray()
 
             val frameWidth =

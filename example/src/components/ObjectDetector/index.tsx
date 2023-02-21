@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import {
   DetectedObject,
   detectObjects,
+  FrameProcessorConfig,
 } from 'vision-camera-realtime-object-detection';
 import {
   Camera,
@@ -18,9 +19,11 @@ interface Props {
 const ObjectDetector: React.FC<Props> = ({ device }) => {
   const [objects, setObjects] = useState<DetectedObject[]>([]);
 
-  const frameProcessorConfig = {
-    model: 'efficientnet_lite0_fp32_2.tflite',
+  const frameProcessorConfig: FrameProcessorConfig = {
+    modelFile: 'model.tflite',
     size: 224,
+    classificationConfidenceThreshold: 0.4,
+    maxPerObjectLabelCount: 2,
   };
 
   const { width, height } = Dimensions.get('window');
