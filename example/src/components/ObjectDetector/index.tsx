@@ -20,7 +20,7 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
   const [objects, setObjects] = useState<DetectedObject[]>([]);
 
   const frameProcessorConfig: FrameProcessorConfig = {
-    modelFile: 'model.tflite',
+    modelFile: 'lite-model_efficientdet_lite0_detection_metadata_1.tflite',
     size: 224,
     classificationConfidenceThreshold: 0.4,
     maxPerObjectLabelCount: 2,

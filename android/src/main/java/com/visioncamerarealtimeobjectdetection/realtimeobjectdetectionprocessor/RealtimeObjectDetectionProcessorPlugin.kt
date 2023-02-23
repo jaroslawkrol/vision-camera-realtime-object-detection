@@ -26,6 +26,7 @@ class RealtimeObjectDetectionProcessorPlugin : FrameProcessorPlugin("detectObjec
                 CustomObjectDetectorOptions.Builder(localModel)
                     .setDetectorMode(CustomObjectDetectorOptions.SINGLE_IMAGE_MODE)
                     .enableClassification()
+                    .enableMultipleObjects()
                     .setClassificationConfidenceThreshold(classificationConfidenceThreshold.toFloat())
                     .setMaxPerObjectLabelCount(maxPerObjectLabelCount)
                     .build()

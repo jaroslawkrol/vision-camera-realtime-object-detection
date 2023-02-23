@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
-#import <MLKit.h>
 #import <VisionCamera/Frame.h>
 #import <VisionCamera/FrameProcessorPlugin.h>
+#import <TensorFlowLiteTaskVision/TensorFlowLiteTaskVision.h>
 
 // TODO: extract to separate file
 @interface ImageResizeResult : NSObject
@@ -27,32 +27,36 @@
 @end
 
 @interface RealtimeObjectDetectionProcessorPlugin : NSObject
-+ (MLKObjectDetector*)detector:(NSDictionary*)config;
++ (TFLObjectDetector*)detector:(NSDictionary*)config;
 + (ImageResizeResult*)resizeFrameToUIimage:(Frame*)frame size:(float)size;
 @end
 
 @implementation RealtimeObjectDetectionProcessorPlugin
 
-+ (MLKObjectDetector*)detector:(NSDictionary*)config {
-  static MLKObjectDetector* detector = nil;
++ (TFLObjectDetector*)detector:(NSDictionary*)config {
+  static TFLObjectDetector* detector = nil;
   if (detector == nil) {
     NSString* filename = config[@"modelFile"];
     NSString* extension = [filename pathExtension];
     NSString* modelName = [filename stringByDeletingPathExtension];
-    NSString* path = [[NSBundle mainBundle] pathForResource:modelName ofType:extension];
-    MLKLocalModel* localModel = [[MLKLocalModel alloc] initWithPath:path];
+    NSString* modelPath = [[NSBundle mainBundle] pathForResource:modelName ofType:extension];
 
     NSNumber* classificationConfidenceThreshold = config[@"classificationConfidenceThreshold"];
     NSNumber* maxPerObjectLabelCount = config[@"maxPerObjectLabelCount"];
-    MLKCustomObjectDetectorOptions* options =
-        [[MLKCustomObjectDetectorOptions alloc] initWithLocalModel:localModel];
-    options.detectorMode = MLKObjectDetectorModeSingleImage;
-    options.shouldEnableClassification = YES;
-    options.shouldEnableMultipleObjects = NO;
-    options.classificationConfidenceThreshold = classificationConfidenceThreshold;
-    options.maxPerObjectLabelCount = maxPerObjectLabelCount.intValue;
-
-    detector = [MLKObjectDetector objectDetectorWithOptions:options];
+    TFLObjectDetectorOptions *options = [[TFLObjectDetectorOptions alloc] initWithModelPath:modelPath];
+    options.classificationOptions.scoreThreshold = classificationConfidenceThreshold.floatValue;
+    options.classificationOptions.maxResults = maxPerObjectLabelCount.intValue;
+      options.baseOptions.computeSettings.cpuSettings.numThreads = 2;
+//    options.detectorMode = MLKObjectDetectorModeSingleImage;
+//    options.shouldEnableClassification = YES;
+//    options.shouldEnableMultipleObjects = NO;
+//    options.classificationConfidenceThreshold = classificationConfidenceThreshold;
+//    options.maxPerObjectLabelCount = maxPerObjectLabelCount.intValue;
+    NSError* error;
+    detector = [TFLObjectDetector objectDetectorWithOptions:options error:nil];
+      if(error) {
+          NSLog(@"RealtimeObjectDetectionProcessorPluginInit: Error occurred: %@", error);
+      }
   }
   return detector;
 }
@@ -92,36 +96,45 @@ static inline id detectObjects(Frame* frame, NSArray* args) {
 
   ImageResizeResult* resizedImageResult =
       [RealtimeObjectDetectionProcessorPlugin resizeFrameToUIimage:frame size:size.floatValue];
-  MLKVisionImage* image = [[MLKVisionImage alloc] initWithImage:resizedImageResult.image];
-  image.orientation = orientation;
+  GMLImage* gmlImage = [[GMLImage alloc] initWithImage:resizedImageResult.image];
+  gmlImage.orientation = orientation;
 
   NSError* error;
-  NSArray<MLKObject*>* objects =
-      [[RealtimeObjectDetectionProcessorPlugin detector:config] resultsInImage:image
-                                                                           error:&error];
-
-  NSMutableArray* results = [NSMutableArray arrayWithCapacity:objects.count];
-  for (MLKObject* object in objects) {
-    NSMutableArray* labels = [NSMutableArray arrayWithCapacity:object.labels.count];
-
-    for (MLKObjectLabel* label in object.labels) {
-      [labels addObject:@{
-        @"index" : [NSNumber numberWithFloat:label.index],
-        @"label" : label.text,
-        @"confidence" : [NSNumber numberWithFloat:label.confidence]
-      }];
+  TFLDetectionResult *detectionResult =
+      [[RealtimeObjectDetectionProcessorPlugin detector:config] detectWithGMLImage:gmlImage error:&error];
+    
+    if(error) {
+        NSLog(@"RealtimeObjectDetectionProcessorPlugin: Error occurred: %@", error);
+    } else {
+        NSLog(@"detectionResult: %@", detectionResult);
     }
 
-    if (labels.count != 0) {
+    if(!detectionResult) {
+        return @[];
+    }
+  NSMutableArray* results = [NSMutableArray arrayWithCapacity:detectionResult.detections.count];
+  for (TFLDetection* detection in detectionResult.detections) {
+    NSMutableArray* labels = [NSMutableArray arrayWithCapacity:detection.categories.count];
+
+      if (detection.categories.count != 0) {
+          
+        for (TFLCategory* category in detection.categories) {
+          [labels addObject:@{
+            @"index" : [NSNumber numberWithLong:category.index],
+            @"label" : category.displayName,
+            @"confidence" : [NSNumber numberWithFloat:category.score]
+          }];
+        }
+
       [results addObject:@{
         @"width" : [NSNumber
-            numberWithFloat:object.frame.size.width / resizedImageResult.image.size.width],
+            numberWithFloat:detection.boundingBox.size.width * resizedImageResult.ratio / resizedImageResult.image.size.width ],
         @"height" : [NSNumber
-            numberWithFloat:object.frame.size.height / resizedImageResult.image.size.height],
+            numberWithFloat:detection.boundingBox.size.height * resizedImageResult.ratio / resizedImageResult.image.size.height],
         @"top" :
-            [NSNumber numberWithFloat:object.frame.origin.y / resizedImageResult.image.size.height],
+            [NSNumber numberWithFloat:detection.boundingBox.origin.y * resizedImageResult.ratio / resizedImageResult.image.size.height],
         @"left" :
-            [NSNumber numberWithFloat:object.frame.origin.x / resizedImageResult.image.size.width],
+            [NSNumber numberWithFloat:detection.boundingBox.origin.x * resizedImageResult.ratio / resizedImageResult.image.size.width],
         @"frameRotation" : [NSNumber numberWithFloat:frame.orientation],
         @"labels" : labels
       }];

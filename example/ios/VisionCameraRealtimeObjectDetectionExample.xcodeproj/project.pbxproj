@@ -12,9 +12,13 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3D06205CB3467253F64A37CC /* libPods-VisionCameraRealtimeObjectDetectionExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114901553BFB5A046B3E2EAA /* libPods-VisionCameraRealtimeObjectDetectionExample.a */; };
+		64890479B3C946DD9AAA0BC0 /* lite-model_efficientdet_lite4_detection_metadata_2.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 20A0C35F105E47CEA735786C /* lite-model_efficientdet_lite4_detection_metadata_2.tflite */; };
+		731FEF425140442EB2D48977 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 0C1B6D8B922444ADAC2EF124 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		92040DB1035EEF7FED988466 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */; };
+		CE86BE323979450687CDA2CF /* model_2.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 9ABB0012D599464DB3A16904 /* model_2.tflite */; };
 		DC38152D33D14343806FF634 /* model.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 90B33A24A9334E1F9DAB4446 /* model.tflite */; };
+		2D5E599BA16F49F9BAC98272 /* detect.tflite in Resources */ = {isa = PBXBuildFile; fileRef = 58041736526C40F3839679C0 /* detect.tflite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +35,7 @@
 		00E356EE1AD99517003FC87E /* VisionCameraRealtimeObjectDetectionExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VisionCameraRealtimeObjectDetectionExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* VisionCameraRealtimeObjectDetectionExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VisionCameraRealtimeObjectDetectionExampleTests.m; sourceTree = "<group>"; };
+		0C1B6D8B922444ADAC2EF124 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "lite-model_yolo-v5-tflite_tflite_model_1.tflite"; path = "../assets/model/lite-model_yolo-v5-tflite_tflite_model_1.tflite"; sourceTree = "<group>"; };
 		114901553BFB5A046B3E2EAA /* libPods-VisionCameraRealtimeObjectDetectionExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VisionCameraRealtimeObjectDetectionExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* VisionCameraRealtimeObjectDetectionExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisionCameraRealtimeObjectDetectionExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = VisionCameraRealtimeObjectDetectionExample/AppDelegate.h; sourceTree = "<group>"; };
@@ -39,13 +44,16 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = VisionCameraRealtimeObjectDetectionExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = VisionCameraRealtimeObjectDetectionExample/main.m; sourceTree = "<group>"; };
 		1B4796C89DDFD40C7D284D70 /* Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests/Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
+		20A0C35F105E47CEA735786C /* lite-model_efficientdet_lite4_detection_metadata_2.tflite */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "lite-model_efficientdet_lite4_detection_metadata_2.tflite"; path = "../assets/model/lite-model_efficientdet_lite4_detection_metadata_2.tflite"; sourceTree = "<group>"; };
 		40C44D456015AC07814FD75C /* Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.release.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests/Pods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		41425887412EDDF71410E311 /* Pods-VisionCameraRealtimeObjectDetectionExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample.debug.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample/Pods-VisionCameraRealtimeObjectDetectionExample.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = VisionCameraRealtimeObjectDetectionExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		90B33A24A9334E1F9DAB4446 /* model.tflite */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = model.tflite; path = ../assets/model/model.tflite; sourceTree = "<group>"; };
+		9ABB0012D599464DB3A16904 /* model_2.tflite */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = model_2.tflite; path = ../assets/model/model_2.tflite; sourceTree = "<group>"; };
 		B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0CCD4BBBDE995D6F19ABE06 /* Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample/Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		90B33A24A9334E1F9DAB4446 /* model.tflite */ = {isa = PBXFileReference; name = "model.tflite"; path = "../assets/model/model.tflite"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		58041736526C40F3839679C0 /* detect.tflite */ = {isa = PBXFileReference; name = "detect.tflite"; path = "../assets/model/detect.tflite"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +91,19 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0ED46F017A604D728A8736E1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				90B33A24A9334E1F9DAB4446 /* model.tflite */,
+				9ABB0012D599464DB3A16904 /* model_2.tflite */,
+				0C1B6D8B922444ADAC2EF124 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite */,
+				20A0C35F105E47CEA735786C /* lite-model_efficientdet_lite4_detection_metadata_2.tflite */,
+				58041736526C40F3839679C0 /* detect.tflite */,
+			);
+			name = Resources;
+			path = "";
 			sourceTree = "<group>";
 		};
 		13B07FAE1A68108700A75B9A /* VisionCameraRealtimeObjectDetectionExample */ = {
@@ -150,15 +171,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		0ED46F017A604D728A8736E1 /* Resources */ = {
-			isa = "PBXGroup";
-			children = (
-				90B33A24A9334E1F9DAB4446 /* model.tflite */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -257,6 +269,10 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				DC38152D33D14343806FF634 /* model.tflite in Resources */,
+				CE86BE323979450687CDA2CF /* model_2.tflite in Resources */,
+				731FEF425140442EB2D48977 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite in Resources */,
+				64890479B3C946DD9AAA0BC0 /* lite-model_efficientdet_lite4_detection_metadata_2.tflite in Resources */,
+				2D5E599BA16F49F9BAC98272 /* detect.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
