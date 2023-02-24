@@ -515,7 +515,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.6.0)
-  - vision-camera-realtime-object-detection (0.1.0):
+  - vision-camera-realtime-object-detection (0.3.0):
     - GoogleMLKit/ObjectDetectionCustom (= 3.2.0)
     - React-Core
   - VisionCamera (2.15.4):
@@ -773,7 +773,7 @@ SPEC CHECKSUMS:
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  vision-camera-realtime-object-detection: 62daeb75f9c9d0e8c0185468470385259882c2fd
+  vision-camera-realtime-object-detection: aa082fec1441dbf4030eeba12332bbe836a3d767
   VisionCamera: c6356b309f7b8e185b7be2e703ec67bb35acf345
   Yoga: 5ed1699acbba8863755998a4245daa200ff3817b
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

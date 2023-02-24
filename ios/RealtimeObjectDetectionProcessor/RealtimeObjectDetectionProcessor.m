@@ -3,32 +3,8 @@
 #import <VisionCamera/Frame.h>
 #import <VisionCamera/FrameProcessorPlugin.h>
 
-// TODO: extract to separate file
-@interface ImageResizeResult : NSObject
-
-@property(nonatomic, strong, readonly) UIImage* image;
-@property(nonatomic, assign, readonly) float ratio;
-
-- (instancetype)initWithImage:(UIImage*)image ratio:(float)ratio;
-
-@end
-
-@implementation ImageResizeResult
-
-- (instancetype)initWithImage:(UIImage*)image ratio:(float)ratio {
-  self = [super init];
-  if (self) {
-    _image = image;
-    _ratio = ratio;
-  }
-  return self;
-}
-
-@end
-
 @interface RealtimeObjectDetectionProcessorPlugin : NSObject
 + (MLKObjectDetector*)detector:(NSDictionary*)config;
-+ (ImageResizeResult*)resizeFrameToUIimage:(Frame*)frame size:(float)size;
 @end
 
 @implementation RealtimeObjectDetectionProcessorPlugin
@@ -46,7 +22,7 @@
     NSNumber* maxPerObjectLabelCount = config[@"maxPerObjectLabelCount"];
     MLKCustomObjectDetectorOptions* options =
         [[MLKCustomObjectDetectorOptions alloc] initWithLocalModel:localModel];
-    options.detectorMode = MLKObjectDetectorModeSingleImage;
+    options.detectorMode = MLKObjectDetectorModeStream;
     options.shouldEnableClassification = YES;
     options.shouldEnableMultipleObjects = NO;
     options.classificationConfidenceThreshold = classificationConfidenceThreshold;
@@ -57,43 +33,18 @@
   return detector;
 }
 
-+ (ImageResizeResult*)resizeFrameToUIimage:(Frame*)frame size:(float)size {
-  CGSize targetSize = CGSizeMake(size, size);
-  CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
-
-  CIImage* ciImage = [CIImage imageWithCVPixelBuffer:imageBuffer];
-  CIContext* context = [CIContext contextWithOptions:nil];
-  CGImageRef cgImage = [context createCGImage:ciImage fromRect:[ciImage extent]];
-  UIImage* uiImage = [UIImage imageWithCGImage:cgImage];
-  CGImageRelease(cgImage);
-
-  float widthRatio = targetSize.width / uiImage.size.width;
-  float heightRatio = targetSize.height / uiImage.size.height;
-  float ratio = widthRatio < heightRatio ? widthRatio : heightRatio;
-
-  CGSize newSize = CGSizeMake(uiImage.size.width * ratio, uiImage.size.height * ratio);
-  CGRect rect = CGRectMake(0, 0, newSize.width, newSize.height);
-
-  UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0);
-  [uiImage drawInRect:rect];
-
-  UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-
-  ImageResizeResult* result = [[ImageResizeResult alloc] initWithImage:newImage ratio:ratio];
-  return result;
-}
-
 static inline id detectObjects(Frame* frame, NSArray* args) {
   NSDictionary* config = [args objectAtIndex:0];
   NSNumber* size = config[@"size"];
 
   UIImageOrientation orientation = frame.orientation;
 
-  ImageResizeResult* resizedImageResult =
-      [RealtimeObjectDetectionProcessorPlugin resizeFrameToUIimage:frame size:size.floatValue];
-  MLKVisionImage* image = [[MLKVisionImage alloc] initWithImage:resizedImageResult.image];
+  MLKVisionImage* image = [[MLKVisionImage alloc] initWithBuffer:frame.buffer];
   image.orientation = orientation;
+
+  CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
+  size_t width = CVPixelBufferGetWidth(imageBuffer);
+  size_t height = CVPixelBufferGetHeight(imageBuffer);
 
   NSError* error;
   NSArray<MLKObject*>* objects =
@@ -115,13 +66,13 @@ static inline id detectObjects(Frame* frame, NSArray* args) {
     if (labels.count != 0) {
       [results addObject:@{
         @"width" : [NSNumber
-            numberWithFloat:object.frame.size.width / resizedImageResult.image.size.width],
+            numberWithFloat:object.frame.size.width / width],
         @"height" : [NSNumber
-            numberWithFloat:object.frame.size.height / resizedImageResult.image.size.height],
+            numberWithFloat:object.frame.size.height / height],
         @"top" :
-            [NSNumber numberWithFloat:object.frame.origin.y / resizedImageResult.image.size.height],
+            [NSNumber numberWithFloat:object.frame.origin.y / height],
         @"left" :
-            [NSNumber numberWithFloat:object.frame.origin.x / resizedImageResult.image.size.width],
+            [NSNumber numberWithFloat:object.frame.origin.x / width],
         @"frameRotation" : [NSNumber numberWithFloat:frame.orientation],
         @"labels" : labels
       }];

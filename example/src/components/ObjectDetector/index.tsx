@@ -21,7 +21,6 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
 
   const frameProcessorConfig: FrameProcessorConfig = {
     modelFile: 'model.tflite',
-    size: 224,
     classificationConfidenceThreshold: 0.4,
     maxPerObjectLabelCount: 2,
   };
@@ -63,7 +62,9 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
             style={[styles.detectionFrame, { top, left, width, height }]}
           >
             <Text style={styles.detectionFrameLabel}>
-              {labels.map((label) => label.label).join(',')}
+              {`${labels
+                .map((label) => `${label.label} (${label.confidence})`)
+                .join(',')} `}
             </Text>
           </View>
         )

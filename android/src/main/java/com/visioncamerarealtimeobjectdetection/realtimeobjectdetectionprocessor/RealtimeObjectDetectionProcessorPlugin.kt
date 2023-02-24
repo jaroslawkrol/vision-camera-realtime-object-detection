@@ -24,7 +24,7 @@ class RealtimeObjectDetectionProcessorPlugin : FrameProcessorPlugin("detectObjec
             val maxPerObjectLabelCount = config.getInt("maxPerObjectLabelCount")
             val customObjectDetectorOptions =
                 CustomObjectDetectorOptions.Builder(localModel)
-                    .setDetectorMode(CustomObjectDetectorOptions.SINGLE_IMAGE_MODE)
+                    .setDetectorMode(CustomObjectDetectorOptions.STREAM_MODE)
                     .enableClassification()
                     .setClassificationConfidenceThreshold(classificationConfidenceThreshold.toFloat())
                     .setMaxPerObjectLabelCount(maxPerObjectLabelCount)
