@@ -20,9 +20,10 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
   const [objects, setObjects] = useState<DetectedObject[]>([]);
 
   const frameProcessorConfig: FrameProcessorConfig = {
-    modelFile: 'model.tflite',
-    classificationConfidenceThreshold: 0.4,
-    maxPerObjectLabelCount: 1,
+    modelFile: 'efficientdet-lite-bear.tflite',
+    scoreThreshold: 0.4,
+    maxResults: 1,
+    numThreads: 4,
   };
 
   const { width, height } = Dimensions.get('window');
@@ -50,9 +51,6 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={true}
-        // preset={'medium'}
-        // colorSpace="srgb"
-        video={true}
       />
       {objects?.map(
         (
@@ -64,7 +62,9 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
             style={[styles.detectionFrame, { top, left, width, height }]}
           >
             <Text style={styles.detectionFrameLabel}>
-              {labels.map((label) => `${label.label} (${label.confidence})`).join(',')}
+              {labels
+                .map((label) => `${label.label} (${label.confidence})`)
+                .join(',')}
             </Text>
           </View>
         )

@@ -14,6 +14,7 @@
 		3D06205CB3467253F64A37CC /* libPods-VisionCameraRealtimeObjectDetectionExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 114901553BFB5A046B3E2EAA /* libPods-VisionCameraRealtimeObjectDetectionExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		92040DB1035EEF7FED988466 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */; };
+		F3A2FA63A5604E6BA3CE5459 /* efficientdet-lite-bear.tflite in Resources */ = {isa = PBXBuildFile; fileRef = F7D3C5600E2749F79FDB4245 /* efficientdet-lite-bear.tflite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		B10E3F3BE4CB759E89FD8E56 /* libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-VisionCameraRealtimeObjectDetectionExample-VisionCameraRealtimeObjectDetectionExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0CCD4BBBDE995D6F19ABE06 /* Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; path = "Target Support Files/Pods-VisionCameraRealtimeObjectDetectionExample/Pods-VisionCameraRealtimeObjectDetectionExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F7D3C5600E2749F79FDB4245 /* efficientdet-lite-bear.tflite */ = {isa = PBXFileReference; name = "efficientdet-lite-bear.tflite"; path = "../assets/model/efficientdet-lite-bear.tflite"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				9ABB0012D599464DB3A16904 /* model_2.tflite */,
 				0C1B6D8B922444ADAC2EF124 /* lite-model_yolo-v5-tflite_tflite_model_1.tflite */,
 				58041736526C40F3839679C0 /* detect.tflite */,
+				F7D3C5600E2749F79FDB4245 /* efficientdet-lite-bear.tflite */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -258,6 +261,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				F3A2FA63A5604E6BA3CE5459 /* efficientdet-lite-bear.tflite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -32,20 +32,17 @@ export interface FrameProcessorConfig {
    */
   modelFile: string;
 
-  /**
-   * Batch size of model.
-   */
-  size?: number;
+  scoreThreshold?: number;
 
-  classificationConfidenceThreshold?: number;
+  maxResults?: number;
 
-  maxPerObjectLabelCount?: number;
+  numThreads?: number;
 }
 
 const defaultFrameProcessorConfig: Partial<FrameProcessorConfig> = {
-  size: 255,
-  classificationConfidenceThreshold: 0.3,
-  maxPerObjectLabelCount: 1,
+  scoreThreshold: 0.3,
+  maxResults: 1,
+  numThreads: 1,
 };
 
 /**
