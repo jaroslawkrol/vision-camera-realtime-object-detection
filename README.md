@@ -1,6 +1,8 @@
 <h1>React Native Realtime Object Detection<br/></h1>
 
-[VisionCamera](https://github.com/mrousavy/react-native-vision-camera) Frame Processor Plugin for object detection using [TensorFlow Lite Task Vision](https://www.tensorflow.org/lite/inference_with_metadata/task_library/object_detector).
+![](https://i.imgur.com/30gWAl9.gifv)
+
+:camera: [VisionCamera](https://github.com/mrousavy/react-native-vision-camera) Frame Processor Plugin for object detection using [TensorFlow Lite Task Vision](https://www.tensorflow.org/lite/inference_with_metadata/task_library/object_detector).
 
 With this library, you can use the benefits of Machine Learning in your React Native app without a single line of native code. [Create your own model](https://www.tensorflow.org/lite/models/modify/model_maker/object_detection) or find and use one commonly available on [TFHub](https://tfhub.dev/). Implement the solution in a few simple steps:
 
