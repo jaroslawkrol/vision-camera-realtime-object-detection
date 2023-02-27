@@ -9,7 +9,7 @@ import com.visioncamerarealtimeobjectdetection.realtimeobjectdetectionprocessor.
 
 class RealtimeObjectDetectionProcessorPluginPackage : ReactPackage {
   override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-    FrameProcessorPlugin.register(RealtimeObjectDetectionProcessorPlugin())
+    FrameProcessorPlugin.register(RealtimeObjectDetectionProcessorPlugin(reactContext))
     return emptyList()
   }
 

@@ -1,108 +1,135 @@
 package com.visioncamerarealtimeobjectdetection.realtimeobjectdetectionprocessor
 
+import kotlin.math.max
+import android.graphics.Matrix
+import android.graphics.RectF
 import androidx.camera.core.ImageProxy
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.bridge.WritableNativeMap
-import com.facebook.react.bridge.ReadableMap
-import com.google.android.gms.tasks.Tasks
-import com.google.mlkit.common.model.LocalModel
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.objects.ObjectDetection
-import com.google.mlkit.vision.objects.ObjectDetector
-import com.google.mlkit.vision.objects.custom.CustomObjectDetectorOptions
+import com.google.android.odml.image.MediaMlImageBuilder
 import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
+import org.tensorflow.lite.task.core.BaseOptions
+import org.tensorflow.lite.task.vision.detector.ObjectDetector
 
-class RealtimeObjectDetectionProcessorPlugin : FrameProcessorPlugin("detectObjects") {
+class RealtimeObjectDetectionProcessorPlugin(reactContext: ReactApplicationContext) :
+    FrameProcessorPlugin("detectObjects") {
+    private val _context: ReactApplicationContext = reactContext
     private var _detector: ObjectDetector? = null
+
+    fun rotateRect(rect: RectF, degrees: Int): RectF {
+        val matrix = Matrix()
+        matrix.postRotate(degrees.toFloat(), rect.centerX(), rect.centerY())
+        val rotatedRect = RectF(rect)
+        matrix.mapRect(rotatedRect)
+        return rotatedRect
+    }
 
     fun getDetectorWithModelFile(config: ReadableMap): ObjectDetector {
         if (_detector == null) {
             val modelFile = config.getString("modelFile")
-            val localModel = LocalModel.Builder().setAssetFilePath("custom/$modelFile").build()
 
-            val classificationConfidenceThreshold = config.getDouble("classificationConfidenceThreshold")
-            val maxPerObjectLabelCount = config.getInt("maxPerObjectLabelCount")
-            val customObjectDetectorOptions =
-                CustomObjectDetectorOptions.Builder(localModel)
-                    .setDetectorMode(CustomObjectDetectorOptions.STREAM_MODE)
-                    .enableClassification()
-                    .setClassificationConfidenceThreshold(classificationConfidenceThreshold.toFloat())
-                    .setMaxPerObjectLabelCount(maxPerObjectLabelCount)
-                    .build()
+            val scoreThreshold = config.getDouble("scoreThreshold").toFloat()
+            val maxResults = config.getInt("maxResults")
+            val numThreads = config.getInt("numThreads")
 
-            _detector = ObjectDetection.getClient(customObjectDetectorOptions)
+            val baseOptionsBuilder = BaseOptions.builder().setNumThreads(numThreads)
+
+            val optionsBuilder =
+                ObjectDetector.ObjectDetectorOptions.builder()
+                    .setBaseOptions(baseOptionsBuilder.build())
+                    .setScoreThreshold(scoreThreshold)
+                    .setMaxResults(maxResults)
+
+            _detector =
+                ObjectDetector.createFromFileAndOptions(
+                    _context,
+                    "custom/$modelFile",
+                    optionsBuilder.build()
+                )
         }
         return _detector!!
     }
 
     override fun callback(frame: ImageProxy, params: Array<Any>): WritableNativeArray {
         val mediaImage = frame.image
-        if (mediaImage != null) {
-            val config = params[0] as ReadableMap;
-            val image = InputImage.fromMediaImage(mediaImage, frame.imageInfo.rotationDegrees)
-            val task = getDetectorWithModelFile(config).process(image)
-            val results = WritableNativeArray()
 
-            val frameWidth =
-                if (frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270)
-                    mediaImage.width
-                else mediaImage.height
-            val frameHeight =
-                if (frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270)
-                    mediaImage.height
-                else mediaImage.width
+        if (mediaImage == null) {
+            return WritableNativeArray()
+        }
 
-            try {
-                val objects = Tasks.await(task)
+        val config = params[0] as ReadableMap
 
-                for (detectedObject in objects) {
-                    val labels = WritableNativeArray()
+        val mlImage = MediaMlImageBuilder(mediaImage).build()
 
-                    for (label in detectedObject.labels) {
-                        val labelMap = WritableNativeMap()
+        val frameWidth = mlImage.width
+        val frameHeight = mlImage.height
 
-                        labelMap.putInt("index", label.index)
-                        labelMap.putString("label", label.text)
-                        labelMap.putDouble("confidence", label.confidence.toDouble())
+        // val ratio = max(mlImage.width.toFloat() / frameWidth, mlImage.height.toFloat() / frameHeight)
 
-                        labels.pushMap(labelMap)
-                    }
+        val results = WritableNativeArray()
+        val detectedObjects = getDetectorWithModelFile(config).detect(mlImage)
 
-                    if (labels.size() > 0) {
-                        val objectMap = WritableNativeMap()
+        for (detectedObject in detectedObjects) {
+            val labels = WritableNativeArray()
 
-                        objectMap.putArray("labels", labels)
-                        objectMap.putDouble(
-                            "top",
-                            (detectedObject.boundingBox.top.toFloat() / frameWidth).toDouble()
-                        )
-                        objectMap.putDouble(
-                            "left",
-                            (detectedObject.boundingBox.left.toFloat() / frameHeight).toDouble()
-                        )
-                        objectMap.putDouble(
-                            "width",
-                            ((detectedObject.boundingBox.right - detectedObject.boundingBox.left)
-                                    .toFloat() / frameHeight)
-                                .toDouble()
-                        )
-                        objectMap.putDouble(
-                            "height",
-                            ((detectedObject.boundingBox.bottom - detectedObject.boundingBox.top)
-                                    .toFloat() / frameWidth)
-                                .toDouble()
-                        )
+            for (label in detectedObject.categories) {
+                val labelMap = WritableNativeMap()
 
-                        results.pushMap(objectMap)
-                    }
+                labelMap.putInt("index", label.index)
+                labelMap.putString("label", label.label)
+                labelMap.putDouble("confidence", label.score.toDouble())
+
+                labels.pushMap(labelMap)
+            }
+
+            if (labels.size() > 0) {
+                val objectMap = WritableNativeMap()
+
+                objectMap.putArray("labels", labels)
+
+                val top = when (frame.imageInfo.rotationDegrees) {
+                    90 -> detectedObject.boundingBox.left / frameWidth
+                    180 -> (frameHeight - detectedObject.boundingBox.bottom) / frameHeight
+                    270 -> (frameWidth - detectedObject.boundingBox.right) / frameWidth
+                    else -> detectedObject.boundingBox.top / frameHeight
                 }
 
-                return results
-            } catch (e: Exception) {
-                e.printStackTrace()
+                val height = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    180 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    270 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    else -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                }
+
+                val left = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (frameHeight - detectedObject.boundingBox.bottom) / frameHeight
+                    180 -> (frameWidth - detectedObject.boundingBox.right) / frameWidth
+                    270 -> detectedObject.boundingBox.top / frameHeight
+                    else -> detectedObject.boundingBox.left / frameWidth
+                }
+
+                val width = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    180 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    270 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    else -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                }
+
+                println("abcde: ${top} ${left} ${width} ${height}")
+                println("xxxxx: ${mediaImage.width} ${mediaImage.height}")
+                println("xxxxx: ${frame.imageInfo.rotationDegrees}")
+
+                objectMap.putDouble("top", top.toDouble())
+                objectMap.putDouble("left", left.toDouble())
+                objectMap.putDouble("width", width.toDouble())
+                objectMap.putDouble("height", height.toDouble())
+
+                results.pushMap(objectMap)
             }
         }
 
-        return WritableNativeArray()
+        return results
     }
 }

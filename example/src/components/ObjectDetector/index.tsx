@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {
   DetectedObject,
   detectObjects,
@@ -21,11 +21,12 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
 
   const frameProcessorConfig: FrameProcessorConfig = {
     modelFile: 'model.tflite',
-    classificationConfidenceThreshold: 0.4,
-    maxPerObjectLabelCount: 2,
+    scoreThreshold: 0.4,
+    maxResults: 1,
+    numThreads: 4,
   };
 
-  const { width, height } = Dimensions.get('window');
+  const windowDimensions = useWindowDimensions();
 
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet';
@@ -34,10 +35,10 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
     runOnJS(setObjects)(
       detectedObjects.map((obj) => ({
         ...obj,
-        top: obj.top * height,
-        left: obj.left * width,
-        width: obj.width * width,
-        height: obj.height * height,
+        top: obj.top * windowDimensions.height,
+        left: obj.left * windowDimensions.width,
+        width: obj.width * windowDimensions.width,
+        height: obj.height * windowDimensions.height,
       }))
     );
   }, []);
@@ -50,7 +51,6 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={true}
-        preset={'medium'}
       />
       {objects?.map(
         (
@@ -62,9 +62,9 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
             style={[styles.detectionFrame, { top, left, width, height }]}
           >
             <Text style={styles.detectionFrameLabel}>
-              {`${labels
+              {labels
                 .map((label) => `${label.label} (${label.confidence})`)
-                .join(',')} `}
+                .join(',')}
             </Text>
           </View>
         )
