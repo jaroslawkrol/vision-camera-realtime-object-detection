@@ -66,6 +66,10 @@ static inline id detectObjects(Frame* frame, NSArray* args) {
   GMLImage* gmlImage = [[GMLImage alloc] initWithImage:resizedImageResult];
   gmlImage.orientation = orientation;
 
+  CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(frame.buffer);
+  size_t width = CVPixelBufferGetWidth(imageBuffer);
+  size_t height = CVPixelBufferGetHeight(imageBuffer);
+
   NSError* error;
   TFLDetectionResult* detectionResult = [[RealtimeObjectDetectionProcessorPlugin
       detector:config] detectWithGMLImage:gmlImage error:&error];
