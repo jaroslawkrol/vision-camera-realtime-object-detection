@@ -1,5 +1,6 @@
 package com.visioncamerarealtimeobjectdetection.realtimeobjectdetectionprocessor
 
+import kotlin.math.max
 import android.graphics.Matrix
 import android.graphics.RectF
 import androidx.camera.core.ImageProxy
@@ -62,14 +63,10 @@ class RealtimeObjectDetectionProcessorPlugin(reactContext: ReactApplicationConte
 
         val mlImage = MediaMlImageBuilder(mediaImage).build()
 
-        val frameWidth =
-            if (frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270)
-                mediaImage.width
-            else mediaImage.height
-        val frameHeight =
-            if (frame.imageInfo.rotationDegrees == 90 || frame.imageInfo.rotationDegrees == 270)
-                mediaImage.height
-            else mediaImage.width
+        val frameWidth = mlImage.width
+        val frameHeight = mlImage.height
+
+        // val ratio = max(mlImage.width.toFloat() / frameWidth, mlImage.height.toFloat() / frameHeight)
 
         val results = WritableNativeArray()
         val detectedObjects = getDetectorWithModelFile(config).detect(mlImage)
@@ -92,23 +89,47 @@ class RealtimeObjectDetectionProcessorPlugin(reactContext: ReactApplicationConte
 
                 objectMap.putArray("labels", labels)
 
-                val boundingBox =
-                    rotateRect(detectedObject.boundingBox, frame.imageInfo.rotationDegrees)
+                val top = when (frame.imageInfo.rotationDegrees) {
+                    90 -> detectedObject.boundingBox.left / frameWidth
+                    180 -> (frameHeight - detectedObject.boundingBox.bottom) / frameHeight
+                    270 -> (frameWidth - detectedObject.boundingBox.right) / frameWidth
+                    else -> detectedObject.boundingBox.top / frameHeight
+                }
 
-                objectMap.putDouble("top", (boundingBox.top.toFloat() / frameHeight).toDouble())
-                objectMap.putDouble("left", (boundingBox.left.toFloat() / frameWidth).toDouble())
-                objectMap.putDouble(
-                    "width",
-                    ((boundingBox.right - boundingBox.left).toFloat() / frameWidth).toDouble()
-                )
-                objectMap.putDouble(
-                    "height",
-                    ((boundingBox.bottom - boundingBox.top).toFloat() / frameHeight).toDouble()
-                )
+                val height = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    180 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    270 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    else -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                }
+
+                val left = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (frameHeight - detectedObject.boundingBox.bottom) / frameHeight
+                    180 -> (frameWidth - detectedObject.boundingBox.right) / frameWidth
+                    270 -> detectedObject.boundingBox.top / frameHeight
+                    else -> detectedObject.boundingBox.left / frameWidth
+                }
+
+                val width = when (frame.imageInfo.rotationDegrees) {
+                    90 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    180 -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                    270 -> (detectedObject.boundingBox.bottom - detectedObject.boundingBox.top) / frameHeight
+                    else -> (detectedObject.boundingBox.right - detectedObject.boundingBox.left) / frameWidth
+                }
+
+                println("abcde: ${top} ${left} ${width} ${height}")
+                println("xxxxx: ${mediaImage.width} ${mediaImage.height}")
+                println("xxxxx: ${frame.imageInfo.rotationDegrees}")
+
+                objectMap.putDouble("top", top.toDouble())
+                objectMap.putDouble("left", left.toDouble())
+                objectMap.putDouble("width", width.toDouble())
+                objectMap.putDouble("height", height.toDouble())
 
                 results.pushMap(objectMap)
             }
         }
+
         return results
     }
 }

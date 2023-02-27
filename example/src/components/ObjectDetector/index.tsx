@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import {
   DetectedObject,
   detectObjects,
@@ -20,13 +20,13 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
   const [objects, setObjects] = useState<DetectedObject[]>([]);
 
   const frameProcessorConfig: FrameProcessorConfig = {
-    modelFile: 'efficientdet-lite-bear.tflite',
+    modelFile: 'model.tflite',
     scoreThreshold: 0.4,
     maxResults: 1,
     numThreads: 4,
   };
 
-  const { width, height } = Dimensions.get('window');
+  const windowDimensions = useWindowDimensions();
 
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet';
@@ -35,10 +35,10 @@ const ObjectDetector: React.FC<Props> = ({ device }) => {
     runOnJS(setObjects)(
       detectedObjects.map((obj) => ({
         ...obj,
-        top: obj.top * height,
-        left: obj.left * width,
-        width: obj.width * width,
-        height: obj.height * height,
+        top: obj.top * windowDimensions.height,
+        left: obj.left * windowDimensions.width,
+        width: obj.width * windowDimensions.width,
+        height: obj.height * windowDimensions.height,
       }))
     );
   }, []);
