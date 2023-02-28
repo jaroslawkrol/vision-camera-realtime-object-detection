@@ -1,5 +1,5 @@
 <div align="right">
-<img align="right" src="https://i.imgur.com/TL4GCKh.gif?raw=true" height="550">
+<img align="right" src="https://github.com/jaroslawkrol/vision-camera-realtime-object-detection/blob/chore/demo/vc_rod_demo.gif?raw=true" height="550">
 </div>
 
 <h1>React Native<br />Realtime Object Detection<br/></h1>
