@@ -1,6 +1,8 @@
-<h1>React Native Realtime Object Detection<br/></h1>
+<div align="right">
+<img align="right" src="https://i.imgur.com/TL4GCKh.gif?raw=true" height="550">
+</div>
 
-![](https://i.imgur.com/30gWAl9.gifv)
+<h1>React Native<br />Realtime Object Detection<br/></h1>
 
 :camera: [VisionCamera](https://github.com/mrousavy/react-native-vision-camera) Frame Processor Plugin for object detection using [TensorFlow Lite Task Vision](https://www.tensorflow.org/lite/inference_with_metadata/task_library/object_detector).
 
